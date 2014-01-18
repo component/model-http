@@ -2,7 +2,12 @@
 var map = require('map');
 var noop = function(){};
 var request = require('superagent');
-var type = require('type');
+
+try {
+  var type = require('type');
+} catch (e) {
+  var type = require('type-component');
+}
 
 /**
  * Expose `http`.
