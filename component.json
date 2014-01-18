@@ -1,7 +1,7 @@
 {
   "name": "hades-http",
   "description": "A plugin that adds an HTTP transport to Hades models.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "MIT",
   "scripts": ["index.js"],
   "dependencies": {

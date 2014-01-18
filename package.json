@@ -1,8 +1,13 @@
 {
   "name": "hades-http",
   "description": "A plugin that adds an HTTP transport to Hades models.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "MIT",
+  "dependencies": {
+    "type-component": "0.0.1",
+    "superagent": "~0.16.0",
+    "map": "git://github.com/ianstormtaylor/map#0.1.0"
+  },
   "devDependencies": {
     "hbs": "~2.4.0",
     "express": "~3.4.8"
