@@ -1,24 +1,23 @@
 
-# hades-http
+# model-http
 
-  A plugin that adds an HTTP transport to Hades models.
+  A plugin that adds an HTTP transport to a model.
 
 ## Installation
 
-    $ npm install segmentio/hades-http
-    $ component install segmentio/hades-http
+    $ component install component/model-http
 
 ## Example
 
 ```js
-var hades = require('hades');
-var http = require('hades-http');
+var model = require('model');
+var http = require('model-http');
 
 /**
  * User model.
  */
 
-var User = hades()
+var User = model('user')
   .use(http('/users'))
   .attr('id')
   .attr('name');
@@ -56,7 +55,7 @@ User.get(id, function (err, user) {
 
   Get a model by `id` and invoke `fn(err, model)`.
 
-#### .all(fn)
+#### .getAll(fn)
  
   Get all models and invoke `fn(err, models)`.
 

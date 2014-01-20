@@ -3,26 +3,26 @@ var assert = require('assert');
 var superagent = require('superagent');
 
 try {
-  var hades = require('hades');
-  var http = require('hades-http');
-  var validate = require('hades-validate');
+  var create = require('model');
+  var http = require('model-http');
+  var validate = require('model-validate');
 } catch (e) {
-  var hades = require('../../hades');
+  var create = require('../../model');
   var http = require('..');
-  var validate = require('../../hades-validate');
+  var validate = require('../../model-validate');
 }
 
-describe('hades-http', function () {
+describe('model-http', function () {
 
   afterEach(reset);
 
-  var User = hades()
-    .use(http('/users'))
+  var User = create('user')
+    .use(http())
     .attr('id')
     .attr('name')
     .attr('projects');
 
-  var Project = hades()
+  var Project = create('project')
     .use(validate())
     .use(http('/users/:user/projects'))
     .attr('id')
@@ -33,7 +33,7 @@ describe('hades-http', function () {
 
   describe('.request', function () {
     it('should be exposed', function () {
-      var Model = hades().use(http('/'));
+      var Model = create('user').use(http('/'));
       assert.equal(superagent, Model.request);
       assert.equal(superagent, Model.prototype.request);
     });
@@ -60,7 +60,7 @@ describe('hades-http', function () {
     });
   });
 
-  describe('.all', function () {
+  describe('.getAll', function () {
     it('should get all models', function (done) {
       var one = new User({ name: 'One' });
       var two = new User({ name: 'Two' });
@@ -68,7 +68,7 @@ describe('hades-http', function () {
         if (err) return done(err);
         two.save(function (err) {
           if (err) return done(err);
-          User.all(function (err, col) {
+          User.getAll(function (err, col) {
             if (err) return done(err);
             assert(col[0] instanceof User);
             assert(col[1] instanceof User);
@@ -91,7 +91,7 @@ describe('hades-http', function () {
           if (err) return done(err);
           User.removeAll(function (err) {
             if (err) return done(err);
-            User.all(function (err, col) {
+            User.getAll(function (err, col) {
               if (err) return done(err);
               assert.equal(0, col.length);
               done();

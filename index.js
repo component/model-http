@@ -22,15 +22,70 @@ module.exports = http;
  */
 
 function http (base) {
-  if (!base) throw new Error('must provide base path');
-
   return function plugin (Model) {
+    base = base || '/' + Model.modelName + 's';
 
     /**
      * Expose `request`.
      */
 
     Model.request = Model.prototype.request = request;
+
+    /**
+     * Get by `id`.
+     *
+     * @param {Mixed} args... (optional)
+     * @param {Mixed} id
+     * @param {Function} fn
+     */
+
+    Model.get = function () {
+      var l = arguments.length
+      var args = [].slice.call(arguments, l - 2);
+      var id = arguments[l - 2];
+      var fn = arguments[l - 1];
+
+      var url = replace(base, args) + '/' + id;
+      this.request
+        .get(url)
+        .end(function (res) {
+          if (res.error) return fn(error(res));
+          fn(null, Model(res.body));
+        });
+    };
+
+    /**
+     * Remove by `id`.
+     *
+     * @param {Mixed} args... (optional)
+     * @param {Mixed} id
+     * @param {Function} fn (optional)
+     */
+
+    Model.remove = function () {
+      var l = arguments.length;
+      var last = arguments[l - 1];
+      var fn = noop;
+      var args;
+      var id;
+
+      if ('function' == typeof last) {
+        args = [].slice.call(arguments, l - 2);
+        id = arguments[l - 2];
+        fn = arguments[l - 1];
+      } else {
+        args = [].slice.call(arguments, l - 2);
+        id = arguments[l - 1];
+      }
+
+      var url = replace(base, args) + '/' + id;
+      this.request
+        .del(url)
+        .end(function (res) {
+          if (res.error) return fn(error(res));
+          fn();
+        });
+    };
 
     /**
      * Remove all.
@@ -40,9 +95,14 @@ function http (base) {
      */
 
     Model.removeAll = function () {
-      fn = fn || noop;
-      var args = [].slice.call(arguments, arguments.length - 1);
-      var fn = arguments[arguments.length - 1];
+      var last = arguments[arguments.length - 1];
+      if ('function' == typeof last) {
+        var args = [].slice.call(arguments, arguments.length - 1);
+        var fn = arguments[arguments.length - 1];
+      } else {
+        var args = [].slice.call(arguments);
+      }
+
       var url = replace(base, args);
       this.request
         .del(url)
@@ -59,7 +119,7 @@ function http (base) {
      * @param {Function} fn
      */
 
-    Model.all = function () {
+    Model.getAll = function () {
       var args = [].slice.call(arguments, arguments.length - 1);
       var fn = arguments[arguments.length - 1];
       var url = replace(base, args);
@@ -68,27 +128,6 @@ function http (base) {
         .end(function (res) {
           if (res.error) return fn(error(res));
           fn(null, map(res.body, Model));
-        });
-    };
-
-    /**
-     * Get by `id`.
-     *
-     * @param {Mixed} args... (optional)
-     * @param {Mixed} id
-     * @param {Function} fn
-     */
-
-    Model.get = function () {
-      var args = [].slice.call(arguments, arguments.length - 2);
-      var id = arguments[arguments.length - 2];
-      var fn = arguments[arguments.length - 1];
-      var url = replace(base, args) + '/' + id;
-      this.request
-        .get(url)
-        .end(function (res) {
-          if (res.error) return fn(error(res));
-          fn(null, Model(res.body));
         });
     };
 
