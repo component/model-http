@@ -1,7 +1,7 @@
 {
   "name": "model-http",
   "description": "A plugin that adds an HTTP transport to a model.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "MIT",
   "dependencies": {
     "type-component": "0.0.1",
