@@ -60,6 +60,29 @@ describe('model-http', function () {
     });
   });
 
+  describe('.remove', function () {
+    it('should fail if not found', function (done) {
+      User.remove(function (err, user) {
+        assert(err);
+        done();
+      });
+    });
+
+    it('should remove a model', function (done) {
+      var user = User({ name: 'Name' });
+      user.save(function (err) {
+        if (err) return done(err);
+        User.remove(user.primary(), function (err) {
+          if (err) return done(err);
+          User.get(user.primary(), function (err) {
+            assert(err);
+            done();
+          });
+        });
+      });
+    });
+  });
+
   describe('.getAll', function () {
     it('should get all models', function (done) {
       var one = new User({ name: 'One' });
