@@ -55,6 +55,10 @@ User.get(id, function (err, user) {
 
   Get a model by `id` and invoke `fn(err, model)`.
 
+#### .remove(id, fn)
+
+  Remove a model by `id` and invoke `fn(err, model)`.
+
 #### .getAll(fn)
  
   Get all models and invoke `fn(err, models)`.
